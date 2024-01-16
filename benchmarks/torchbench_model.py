@@ -29,9 +29,24 @@ DETECTRON2_MODELS = {
     "detectron2_fcos_r_50_fpn",
 }
 
-USE_MODEL_OPTIMIZER = {
-  # Using SGD with llama saves up memory.
+# torchbench models that might OOM using Adam.
+# This list was extracted from PyTorch's repository: benchmarks/dynamo/common.py
+TRAIN_WITH_SGD = {
+  "torchrec_dlrm",
+  "demucs",
+  "hf_T5_base",
+  "hf_clip",
   "llama_v2_7b_16h",
+  "mobilenet_v2_quantized_qat",
+  "phi_1_5",
+  "resnet50_quantized_qat",
+  "DALLE2_pytorch",
+  "moco",
+  "timm_efficientdet",
+  "pytorch_CycleGAN_and_pix2pix",
+  "vision_maskrcnn",
+  "dlrm",
+  "resnet50",
   *DETECTRON2_MODELS,
 }
 
@@ -177,7 +192,10 @@ class TorchBenchModel(BenchmarkModel):
 
     This is model suite specific.
     """
-    self.optimizer_class = torch.optim.Adam
+    if self.benchmark_experiment.test == "train" and self.model_name in TRAIN_WITH_SGD:
+      self.optimizer_class = torch.optim.SGD
+    else:
+      self.optimizer_class = torch.optim.Adam
 
     benchmark = self.load_benchmark()
 
@@ -199,8 +217,6 @@ class TorchBenchModel(BenchmarkModel):
     if self.model_name == "yolov3":
       self.example_inputs = (torch.rand(self.benchmark_experiment.batch_size, 3,
                                         384, 512),)
-    if self.benchmark_experiment.test == "train" and self.model_name in USE_MODEL_OPTIMIZER:
-      self.optimizer = benchmark.optimizer
 
     del benchmark
     gc.collect()
