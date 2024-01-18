@@ -77,9 +77,7 @@ def is_xla_device_available(devkind):
 
 
 def move_to_device(item, device):
-  return pytree.tree_map_only(torch.Tensor,
-                              lambda t: t.to(device),
-                              self.example_inputs)
+  return pytree.tree_map_only(torch.Tensor, lambda t: t.to(device), item)
 
 
 def randomize_input(inputs):
