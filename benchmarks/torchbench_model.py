@@ -222,7 +222,7 @@ class TorchBenchModel(BenchmarkModel):
 
       device = self.benchmark_experiment.get_device()
       self.module = self.module.to(device)
-      self.example_inputs = move_to_device(device)
+      self.example_inputs = move_to_device(self.example_inputs, device)
 
     # Torchbench has quite different setup for yolov3, so directly passing
     # the right example_inputs
