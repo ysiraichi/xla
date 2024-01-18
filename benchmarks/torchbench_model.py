@@ -193,7 +193,7 @@ class TorchBenchModel(BenchmarkModel):
 
     # If we are using CUDA, clean-up its cache left-over.
     if self.benchmark_experiment.accelerator == "cuda":
-      torch.cuda.emtpy_cache()
+      torch.cuda.empty_cache()
 
   def set_up(self):
     """Set up module, actual batch_size, example_inputs, and optimizer_class
