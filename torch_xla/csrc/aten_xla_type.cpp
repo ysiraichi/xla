@@ -1701,6 +1701,13 @@ at::Tensor XLANativeFunctions::lift_fresh(const at::Tensor& tensor) {
   return MaybeWrapTensorToFunctional(tensor);
 }
 
+at::Tensor XLANativeFunctions::lift_fresh_copy(const at::Tensor& tensor) {
+  TORCH_LAZY_FN_COUNTER_TIMED_TRACING("xla::");
+  TORCH_INTERNAL_ASSERT(
+      !at::functionalization::impl::isFunctionalTensor(tensor));
+  return clone(tensor, /*memory_format=*/ c10::nullopt);
+}
+
 std::tuple<at::Tensor, at::Tensor> XLANativeFunctions::linalg_inv_ex(
     const at::Tensor& self, bool check_errors) {
   TORCH_LAZY_FN_COUNTER_TIMED_TRACING("xla::");

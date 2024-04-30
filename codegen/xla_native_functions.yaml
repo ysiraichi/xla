@@ -214,6 +214,7 @@ supported:
   - lerp.Tensor
   - lift
   - lift_fresh
+  - lift_fresh_copy
   - linalg_inv_ex
   - linalg_vector_norm
   - linspace
